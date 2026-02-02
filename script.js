@@ -216,5 +216,30 @@ function switchAdminTab(tab, btn) {
     document.getElementById('admin-users').classList.toggle('hidden', tab !== 'users');
     document.getElementById('admin-add-item').classList.toggle('hidden', tab !== 'add-item');
     document.querySelectorAll('#screen-admin .tab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    btn.classList.add('active');// AGORA OS DADOS VÊM DA NUVEM
+const setDB = (key, val) => {
+    db.ref(key).set(val);
+};
+
+// Como o Firebase é lento para baixar, precisamos "escutar" as mudanças
+function inicializarEscuta() {
+    // Escuta Jogadores
+    db.ref('rpg_users').on('value', (snapshot) => {
+        const data = snapshot.val();
+        localStorage.setItem('rpg_users', JSON.stringify(data || []));
+        // Se estiver na tela de admin ou player, atualiza a visão
+        if (!document.getElementById('screen-admin').classList.contains('hidden')) renderizarAdmin();
+        if (!document.getElementById('screen-player').classList.contains('hidden')) atualizarInterfacePlayer();
+    });
+
+    // Escuta Itens da Loja
+    db.ref('rpg_items').on('value', (snapshot) => {
+        const data = snapshot.val();
+        localStorage.setItem('rpg_items', JSON.stringify(data || []));
+        if (!document.getElementById('screen-player').classList.contains('hidden')) atualizarInterfacePlayer();
+    });
 }
+inicializarEscuta();
+}
+
+
