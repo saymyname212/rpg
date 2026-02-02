@@ -609,6 +609,25 @@
     function saveFicha() { logado.ficha.classe = document.getElementById('p-classe-in').value; logado.ficha.hist = document.getElementById('p-hist-in').value; saveState(); }
     function upload(input, tipo) { const r = new FileReader(); r.onload = (e) => { if(tipo === 'avatar') logado.avatar = e.target.result; else logado.token = e.target.result; saveState(); }; r.readAsDataURL(input.files[0]); }
     function criarConta() { const u = document.getElementById('l-user').value.trim(); const p = document.getElementById('l-pass').value.trim(); if(!u || !p) return showToast("Preencha tudo!"); let us = DB('c_users'); us.push({id: Date.now(), login: u, nick: u, pass: p, isAdmin: false, gold: 100, points: 5, avatar: '', token: '', attrs: {for:1, agi:1, int:1, vig:1}, items: [], ficha: {classe: 'Aventureiro', hist: ''}}); SAVE('c_users', us); showToast("Conta criada!"); }
+    
+</script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
+<script>
+  // Configuração que o Firebase vai te dar:
+  const firebaseConfig = {
+    apiKey: "SUA_API_KEY",
+    authDomain: "seu-rpg.firebaseapp.com",
+    databaseURL: "https://seu-rpg-default-rtdb.firebaseio.com",
+    projectId: "seu-rpg",
+    storageBucket: "seu-rpg.appspot.com",
+    messagingSenderId: "123456",
+    appId: "1:123456:web:abcde"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
 </script>
 </body>
+
 </html>
