@@ -22,63 +22,93 @@
             background-size: cover; color: white; overflow: hidden;
         }
 
+        /* Utilidades */
         .hidden { display: none !important; }
 
-        /* Notificações */
-        #toast-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 3000; }
-        .toast { background: var(--glass); border: 1px solid var(--gold); color: white; padding: 12px 25px; border-radius: 5px; font-size: 13px; font-weight: bold; animation: slideIn 0.3s ease-out forwards; }
+        /* Toasts e Notificações */
+        #toast-container {
+            position: fixed; bottom: 20px; right: 20px;
+            display: flex; flex-direction: column; gap: 10px; z-index: 3000;
+        }
+        .toast {
+            background: var(--glass); border: 1px solid var(--gold);
+            color: white; padding: 12px 25px; border-radius: 5px;
+            font-size: 13px; font-weight: bold; text-transform: uppercase;
+            animation: slideIn 0.3s ease-out forwards;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
         #notify-bar {
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
-            padding: 15px 40px; border-radius: 0 0 10px 10px; font-weight: bold; z-index: 2000;
-            transition: 0.5s; box-shadow: 0 0 20px rgba(0,0,0,0.5); text-align: center; min-width: 300px;
+            background: var(--gold); color: black; padding: 15px 40px;
+            border-radius: 0 0 10px 10px; font-weight: bold; z-index: 2000;
+            transition: 0.5s; box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            text-align: center; min-width: 300px;
         }
 
         /* Navbar */
-        .navbar { display: flex; background: #000; height: 65px; align-items: center; padding: 0 30px; border-bottom: 2px solid var(--gold); position: relative; z-index: 100; }
+        .navbar {
+            display: flex; background: #000; height: 65px; align-items: center;
+            padding: 0 30px; border-bottom: 2px solid var(--gold); position: relative; z-index: 100;
+        }
         .nav-tabs { display: flex; gap: 15px; flex: 1; }
         .nav-link { color: #888; text-transform: uppercase; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.3s; padding: 5px 10px; position: relative; }
         .nav-link.active { color: var(--gold-bright); border-bottom: 2px solid var(--gold-bright); }
-        .badge-count { position: absolute; top: -5px; right: -5px; background: var(--red); color: white; font-size: 9px; padding: 2px 6px; border-radius: 10px; }
 
-        /* Botão Sair Reformulado */
-        .btn-logout {
-            background: linear-gradient(45deg, #441111, var(--red));
-            color: white; border: 1px solid rgba(255,255,255,0.2);
-            padding: 8px 18px; border-radius: 4px; cursor: pointer;
-            font-size: 11px; font-weight: bold; letter-spacing: 1px;
-            transition: 0.3s; box-shadow: 0 0 10px rgba(255, 70, 85, 0.3);
+        .badge-count {
+            position: absolute; top: -5px; right: -5px; background: var(--red);
+            color: white; font-size: 9px; padding: 2px 6px; border-radius: 10px;
         }
-        .btn-logout:hover { transform: scale(1.05); box-shadow: 0 0 15px var(--red); }
 
-        /* Layout */
+        /* Content Areas */
         .main-content { height: calc(100vh - 65px); display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .portal-container { background: var(--glass); border: var(--border); padding: 25px; border-radius: 12px; width: 100%; max-width: 1100px; max-height: 85vh; overflow-y: auto; backdrop-filter: blur(15px); }
+        .portal-container {
+            background: var(--glass); border: var(--border); padding: 25px;
+            border-radius: 12px; width: 100%; max-width: 1100px; max-height: 85vh;
+            overflow-y: auto; backdrop-filter: blur(15px); box-shadow: 0 0 40px rgba(0,0,0,1);
+        }
 
-        /* Dados */
-        .dice-bar { display: flex; gap: 10px; margin-bottom: 15px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px; justify-content: center; }
-        .dice-btn { background: #222; border: 1px solid var(--gold); color: var(--gold); padding: 8px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .dice-btn:hover { background: var(--gold); color: black; }
+        /* ADM Dashboard */
+        .adm-dashboard { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 30px; }
+        .adm-btn-large { 
+            background: #111; border: 1px solid var(--gold); padding: 30px 20px; 
+            text-align: center; cursor: pointer; border-radius: 10px; transition: 0.3s;
+            text-transform: uppercase; font-weight: bold; letter-spacing: 2px; font-size: 1rem;
+            position: relative;
+        }
+        .adm-btn-large:hover { background: var(--gold); color: black; transform: translateY(-5px); }
 
-        /* Grids */
+        /* Grids e Cards */
         .compact-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-        .compact-card { background: var(--card-bg); border: 1px solid #444; border-radius: 6px; overflow: hidden; text-align: center; padding-bottom: 8px; transition: 0.3s; cursor: pointer; }
-        .compact-card img { width: 100%; height: 100px; object-fit: cover; }
+        .compact-card { background: var(--card-bg); border: 1px solid #444; border-radius: 6px; overflow: hidden; text-align: center; padding-bottom: 8px; position: relative; transition: 0.3s; cursor: pointer; }
+        .compact-card:hover { border-color: var(--gold); transform: scale(1.02); }
+        .compact-card img { width: 100%; height: 100px; object-fit: cover; border-bottom: 1px solid #333; }
+        .badge-pending { position: absolute; top: 5px; right: 5px; background: orange; color: black; font-size: 8px; padding: 2px 5px; border-radius: 4px; }
 
+        /* Forms */
         input, textarea, select { background: #111; border: 1px solid #444; color: white; padding: 10px; border-radius: 4px; width: 100%; margin: 5px 0; }
         .btn { padding: 8px 15px; cursor: pointer; border: none; font-weight: bold; border-radius: 4px; text-transform: uppercase; font-size: 10px; }
         .btn-gold { background: var(--gold); color: black; }
         .btn-red { background: var(--red); color: white; }
-        .adm-btn-large { background: #111; border: 1px solid var(--gold); padding: 30px 20px; text-align: center; cursor: pointer; border-radius: 10px; transition: 0.3s; font-weight: bold; }
+
         .token-circle { position: absolute; bottom: -10px; right: -10px; width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--gold); background: #000; object-fit: cover; }
-        #chat-window { height: 280px; background: rgba(0,0,0,0.6); border: 1px solid #333; overflow-y: auto; padding: 15px; margin-bottom: 10px; border-radius: 8px; }
+        #chat-window { height: 320px; background: rgba(0,0,0,0.6); border: 1px solid #333; overflow-y: auto; padding: 15px; margin-bottom: 10px; border-radius: 8px; }
+
+        .checkbox-container { display: flex; align-items: center; gap: 10px; color: #888; font-size: 12px; margin: 10px 0; cursor: pointer; }
+        .checkbox-container input { width: auto; margin: 0; }
+
+        .notif-item {
+            background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px;
+            margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;
+            border-left: 4px solid var(--gold);
+        }
     </style>
 </head>
 <body>
 
 <div id="toast-container"></div>
-<div id="notify-bar">NOTIFICAÇÃO!</div>
+<div id="notify-bar">NOTIFICAÇÃO DO MESTRE!</div>
 
 <nav id="main-nav" class="navbar hidden">
     <div class="nav-tabs">
@@ -93,7 +123,7 @@
     </div>
     <div style="display:flex; gap:15px; align-items:center;">
         <span id="gold-nav" style="color:var(--gold-bright); font-weight:bold;">0 🪙</span>
-        <button class="btn-logout" onclick="logout()">LOGOUT</button>
+        <button class="btn-red" onclick="logout()">SAIR</button>
     </div>
 </nav>
 
@@ -102,14 +132,16 @@
         <h1 style="color:var(--gold-bright); margin-bottom:20px; letter-spacing: 5px;">CAVALERIA</h1>
         <input type="text" id="l-user" placeholder="Usuário">
         <input type="password" id="l-pass" placeholder="Senha">
-        <button class="btn btn-gold" style="width:100%; padding:15px" onclick="tentarLogin()">ENTRAR NO REINO</button>
-        <button class="btn" style="width:100%; margin-top:10px; background:transparent; color:var(--gold); border:1px solid var(--gold)" onclick="criarConta()">CRIAR NOVA CONTA</button>
+        <label class="checkbox-container">
+            <input type="checkbox" id="l-remember"> Manter conectado
+        </label>
+        <button class="btn btn-gold" style="width:100%; font-size:14px" onclick="tentarLogin()">ENTRAR</button>
+        <button class="btn" style="width:100%; margin-top:10px; background:transparent; color:var(--gold); border:1px solid var(--gold)" onclick="criarConta()">CRIAR CONTA</button>
     </div>
 
     <div id="screen-game" class="portal-container hidden">
         
         <div id="tab-perfil">
-            <div id="admin-editing-msg" class="hidden" style="background:var(--red); color:white; padding:5px; text-align:center; margin-bottom:10px; border-radius:5px; font-weight:bold; font-size:12px">MODO MESTRE: VOCÊ ESTÁ EDITANDO ESTE JOGADOR</div>
             <button id="btn-voltar-meu" class="btn btn-gold hidden" style="margin-bottom: 15px;" onclick="voltarAoMeuPerfil()">⬅ VOLTAR PARA MEU PERFIL</button>
             <div style="display: grid; grid-template-columns: 300px 1fr; gap: 30px;">
                 <div style="text-align:center">
@@ -119,107 +151,136 @@
                     </div>
                     <div id="p-edit-area" style="margin-top:20px; display: grid; gap: 5px;">
                         <button class="btn btn-gold" onclick="document.getElementById('up-img').click()">FOTO PERFIL</button>
+                        <button class="btn" style="background:#222; color:white" onclick="document.getElementById('up-token').click()">MUDAR TOKEN</button>
                         <input type="file" id="up-img" class="hidden" onchange="upload(this, 'avatar')">
+                        <input type="file" id="up-token" class="hidden" onchange="upload(this, 'token')">
                     </div>
                 </div>
                 <div>
-                    <h1 id="p-nick" style="color:var(--gold-bright); font-size: 2.2rem;"></h1>
-                    <div id="p-adm-controls" class="hidden" style="margin: 10px 0; display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
-                        <div>Ouro: <input type="number" id="p-adm-gold" style="width:80px" onchange="admOverride()"></div>
-                        <div>Pontos: <input type="number" id="p-adm-points" style="width:80px" onchange="admOverride()"></div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <h1 id="p-nick" style="color:var(--gold-bright); font-size: 2.2rem;"></h1>
+                        <button id="btn-edit-nick" onclick="mudarNome()" style="background:none; border:none; cursor:pointer;">✏️</button>
                     </div>
                     <div style="margin: 15px 0;">
                         <label style="font-size:10px; color:var(--gold)">CLASSE</label>
-                        <input type="text" id="p-classe-in" onchange="saveFicha()">
+                        <input type="text" id="p-classe-in" onchange="saveFicha()" placeholder="Sua Classe...">
                     </div>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:20px">
                         <div id="p-attrs"></div>
                         <div>
-                             <h3 style="font-size:12px; color:var(--gold)">PONTOS DISPONÍVEIS: <span id="p-points">0</span></h3>
+                             <h3 style="font-size:12px; color:var(--gold)">PONTOS: <span id="p-points">0</span></h3>
+                             <p style="font-size:11px; color:#666">O mestre controla sua evolução.</p>
                         </div>
                     </div>
-                    <label style="font-size:10px; color:var(--gold); margin-top:15px; display:block">HISTÓRIA</label>
-                    <textarea id="p-hist-in" rows="5" onchange="saveFicha()"></textarea>
+                    <label style="font-size:10px; color:var(--gold)">BIOGRAFIA / HISTÓRIA</label>
+                    <textarea id="p-hist-in" rows="6" onchange="saveFicha()" placeholder="Conte sua jornada..."></textarea>
                 </div>
-            </div>
-        </div>
-
-        <div id="tab-chat" class="hidden">
-            <div class="dice-bar">
-                <button class="dice-btn" onclick="rollDice(4)">d4</button>
-                <button class="dice-btn" onclick="rollDice(6)">d6</button>
-                <button class="dice-btn" onclick="rollDice(8)">d8</button>
-                <button class="dice-btn" onclick="rollDice(10)">d10</button>
-                <button class="dice-btn" onclick="rollDice(12)">d12</button>
-                <button class="dice-btn" onclick="rollDice(20)">d20</button>
-            </div>
-            <div id="chat-window"></div>
-            <div style="display:flex; gap:10px">
-                <input type="text" id="chat-in" placeholder="Digite sua mensagem..." onkeypress="if(event.key==='Enter') sendChat()">
-                <button class="btn btn-gold" onclick="sendChat()">ENVIAR</button>
             </div>
         </div>
 
         <div id="tab-inv" class="hidden">
-            <div style="display:flex; justify-content:space-between; margin-bottom:20px">
-                <h2>🎒 Mochila</h2>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
+                <h2>🎒 Sua Mochila</h2>
                 <button class="btn btn-gold" onclick="openForja()">FORJAR NOVO ITEM</button>
             </div>
-            <div id="modal-forja" class="hidden" style="background:rgba(255,255,255,0.05); padding:15px; border-radius:10px; margin-bottom:20px; border:1px solid var(--gold)">
+            <div id="modal-forja" class="hidden" style="background:rgba(255,255,255,0.05); padding:20px; border-radius:10px; margin-bottom:20px; border:1px solid var(--gold)">
+                <h3>Propor Novo Item</h3>
                 <input type="text" id="f-item-nome" placeholder="Nome do Item">
-                <button class="btn btn-gold" onclick="proporItem()">ENVIAR AO MESTRE</button>
+                <input type="file" id="f-item-img">
+                <button class="btn btn-gold" onclick="proporItem()">ENVIAR PARA O MESTRE</button>
+                <button class="btn btn-red" onclick="openForja()">CANCELAR</button>
             </div>
             <div id="inv-list" class="compact-grid"></div>
         </div>
 
-        <div id="tab-loja" class="hidden">
-            <h2 style="text-align:center; margin-bottom:20px">MERCADO DO REINO</h2>
-            <div id="shop-grid" class="compact-grid"></div>
-        </div>
-
         <div id="tab-social" class="hidden">
-            <h2>Habitantes</h2>
+            <h2>Habitantes do Reino</h2>
             <div id="reino-list" class="compact-grid"></div>
         </div>
 
+        <div id="tab-loja" class="hidden">
+            <h2 style="color:var(--gold-bright); text-align:center; margin-bottom:20px">MERCADO</h2>
+            <div id="shop-grid" class="compact-grid"></div>
+        </div>
+
+        <div id="tab-chat" class="hidden">
+            <div id="chat-window"></div>
+            <div style="display:flex; gap:10px">
+                <input type="text" id="chat-in" placeholder="Mensagem..." onkeypress="if(event.key==='Enter') sendChat()">
+                <button class="btn btn-gold" onclick="sendChat()">ENVIAR</button>
+            </div>
+        </div>
+
         <div id="tab-admin" class="hidden">
-            <div id="adm-main-menu" class="adm-dashboard" style="display:grid; grid-template-columns: 1fr 1fr; gap:20px">
-                <div class="adm-btn-large" onclick="openAdmSub('players')">GERENCIAR JOGADORES</div>
-                <div class="adm-btn-large" onclick="openAdmSub('central')">PEDIDOS E FORJA</div>
-                <div class="adm-btn-large" onclick="openAdmSub('notify')">NOTIFICAÇÕES</div>
-                <div class="adm-btn-large" onclick="openAdmSub('items')">CRIAR ITENS</div>
+            <h1 style="text-align:center; letter-spacing:3px; color:var(--gold-bright)">PAINEL ADM</h1>
+            
+            <div id="adm-main-menu" class="adm-dashboard">
+                <div class="adm-btn-large" onclick="openAdmSub('central')">
+                    Central de Pedidos <span id="adm-badge-central" class="badge-count hidden">0</span>
+                </div>
+                <div class="adm-btn-large" onclick="openAdmSub('players')">Jogadores</div>
+                <div class="adm-btn-large" onclick="openAdmSub('items')">Loja / Itens</div>
+                <div class="adm-btn-large" onclick="openAdmSub('notify')">Notificar</div>
+            </div>
+
+            <div id="adm-sub-central" class="hidden">
+                <button class="btn btn-gold" onclick="backToAdm()">< Voltar</button>
+                <h3 style="margin-top:20px; color:var(--gold)">PEDIDOS PENDENTES</h3>
+                <div id="adm-central-list" style="margin-top:15px"></div>
+            </div>
+
+            <div id="adm-sub-notify" class="hidden">
+                <button class="btn btn-gold" onclick="backToAdm()">< Voltar</button>
+                <div style="max-width:500px; margin: 20px auto; background:rgba(255,255,255,0.05); padding:20px; border-radius:10px;">
+                    <h3 style="text-align:center; margin-bottom:15px">NOTIFICAÇÃO PERSONALIZADA</h3>
+                    
+                    <label style="font-size:10px; color:var(--gold)">MENSAGEM</label>
+                    <input type="text" id="adm-notif-msg" placeholder="Texto da notificação...">
+                    
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin: 10px 0;">
+                        <div>
+                            <label style="font-size:10px; color:var(--gold)">COR FUNDO</label>
+                            <input type="color" id="adm-notif-bg" value="#c4a47c" style="height:40px; padding:2px; cursor:pointer">
+                        </div>
+                        <div>
+                            <label style="font-size:10px; color:var(--gold)">COR TEXTO</label>
+                            <input type="color" id="adm-notif-color" value="#000000" style="height:40px; padding:2px; cursor:pointer">
+                        </div>
+                    </div>
+
+                    <label style="font-size:10px; color:var(--gold)">SOM DO ALERTA</label>
+                    <select id="adm-notif-sound">
+                        <option value="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3">🔔 Padrão</option>
+                        <option value="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3">🎺 Trombetas</option>
+                        <option value="https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3">🪙 Moedas</option>
+                        <option value="https://assets.mixkit.co/active_storage/sfx/951/951-preview.mp3">⚠️ Perigo</option>
+                        <option value="https://www.myinstants.com/media/sounds/level-up-rpg.mp3">⚔️ Level Up</option>
+                    </select>
+
+                    <button class="btn btn-gold" style="width:100%; margin-top:15px; padding:12px" onclick="sendGlobalNotif()">ENVIAR PARA TODOS</button>
+                </div>
+            </div>
+
+            <div id="adm-sub-items" class="hidden">
+                <button class="btn btn-gold" onclick="backToAdm()">< Voltar</button>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-top:20px">
+                    <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:8px">
+                        <h4>NOVO ITEM NA LOJA</h4>
+                        <input type="text" id="adm-in-nome" placeholder="Nome do Item">
+                        <input type="number" id="adm-in-preco" placeholder="Preço (Ouro)">
+                        <input type="file" id="adm-in-img">
+                        <button class="btn btn-gold" style="width:100%; margin-top:10px" onclick="admSalvarItem()">SALVAR NA LOJA</button>
+                    </div>
+                    <div id="adm-items-list-view">
+                        <h4>ITENS ATIVOS</h4>
+                        <div id="adm-shop-items" style="margin-top:10px"></div>
+                    </div>
+                </div>
             </div>
 
             <div id="adm-sub-players" class="hidden">
                 <button class="btn btn-gold" onclick="backToAdm()">< Voltar</button>
                 <div id="adm-players-list" style="margin-top:20px"></div>
-            </div>
-
-            <div id="adm-sub-notify" class="hidden">
-                <button class="btn btn-gold" onclick="backToAdm()">< Voltar</button>
-                <div style="max-width:500px; margin:20px auto; background:rgba(255,255,255,0.05); padding:20px; border-radius:10px">
-                    <input type="text" id="adm-notif-msg" placeholder="Mensagem...">
-                    <input type="color" id="adm-notif-bg" value="#c4a47c">
-                    <select id="adm-notif-sound">
-                        <option value="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3">🔔 Notificação</option>
-                        <option value="https://assets.mixkit.co/active_storage/sfx/951/951-preview.mp3">⚠️ Alerta</option>
-                    </select>
-                    <button class="btn btn-gold" style="width:100%" onclick="sendGlobalNotif()">PROCLAMAR</button>
-                </div>
-            </div>
-
-            <div id="adm-sub-central" class="hidden">
-                <button class="btn btn-gold" onclick="backToAdm()">< Voltar</button>
-                <div id="adm-central-list" style="margin-top:20px"></div>
-            </div>
-            
-            <div id="adm-sub-items" class="hidden">
-                <button class="btn btn-gold" onclick="backToAdm()">< Voltar</button>
-                <div style="margin-top:20px">
-                    <input type="text" id="adm-in-nome" placeholder="Nome Item">
-                    <input type="number" id="adm-in-preco" placeholder="Preço">
-                    <button class="btn btn-gold" onclick="admSalvarItem()">ADICIONAR À LOJA</button>
-                </div>
             </div>
         </div>
     </div>
@@ -228,27 +289,40 @@
 <script>
     let logado = null;
     let visualizandoId = null;
-    let mestreEditando = false;
-
     const DB = (k) => JSON.parse(localStorage.getItem(k)) || [];
     const SAVE = (k, v) => localStorage.setItem(k, JSON.stringify(v));
 
+    function showToast(msg) {
+        const container = document.getElementById('toast-container');
+        const t = document.createElement('div');
+        t.className = 'toast'; t.innerText = msg;
+        container.appendChild(t);
+        setTimeout(() => t.remove(), 4000);
+    }
+
     function init() {
         if(!DB('c_users').find(u => u.login === 'mestre')) {
-            SAVE('c_users', [{id: 999, login:'mestre', nick:'Mestre Supremo', pass:'123', isAdmin:true, gold:999, points:0, avatar:'', token:'', attrs:{for:1,agi:1,int:1,vig:1}, items:[], ficha:{classe:'Mestre', hist:''}}]);
+            SAVE('c_users', [{id: 999, login:'mestre', nick:'O Mestre', pass:'123', isAdmin:true, gold:999, points:0, avatar:'', token:'', attrs:{for:1,agi:1,int:1,vig:1}, items:[], ficha:{classe:'Mestre', hist:''}}]);
+        }
+        const auto = localStorage.getItem('c_auto_login');
+        if(auto) {
+            const user = DB('c_users').find(x => x.login === auto);
+            if(user) { logado = user; entrarNoJogo(); }
         }
         setInterval(checkNotif, 2000);
-        setInterval(loadChat, 3000);
-        setInterval(autoSync, 4000);
+        setInterval(autoSync, 3000);
     }
     init();
 
     function tentarLogin() {
         const u = document.getElementById('l-user').value.trim().toLowerCase();
         const p = document.getElementById('l-pass').value.trim();
-        const users = DB('c_users');
-        const found = users.find(x => x.login.toLowerCase() === u && x.pass === p);
-        if(found) { logado = found; entrarNoJogo(); } else alert("Erro: Usuário ou senha incorretos.");
+        const found = DB('c_users').find(x => x.login.toLowerCase() === u && x.pass === p);
+        if(found) {
+            logado = found;
+            if(document.getElementById('l-remember').checked) localStorage.setItem('c_auto_login', found.login);
+            entrarNoJogo();
+        } else showToast("Login incorreto!");
     }
 
     function entrarNoJogo() {
@@ -257,12 +331,13 @@
         document.getElementById('main-nav').classList.remove('hidden');
         if(logado.isAdmin) document.getElementById('nav-admin').classList.remove('hidden');
         sync();
+        setInterval(loadChat, 3000);
     }
 
-    function logout() { location.reload(); }
+    function logout() { localStorage.removeItem('c_auto_login'); location.reload(); }
 
     function switchTab(t, btn) {
-        if(t !== 'perfil') { visualizandoId = null; mestreEditando = false; }
+        if(t !== 'perfil') visualizandoId = null;
         document.querySelectorAll('.nav-link').forEach(x => x.classList.remove('active'));
         if(btn) btn.classList.add('active');
         ['perfil','loja','inv','social','chat','admin'].forEach(x => {
@@ -273,317 +348,267 @@
         sync();
     }
 
-    function sync() {
-        if(!logado) return;
-        // Pega versão mais recente do usuário logado
-        const currentData = DB('c_users').find(u => u.id === logado.id);
-        if(currentData) logado = currentData;
+    function openAdmSub(sub) {
+        document.getElementById('adm-main-menu').classList.add('hidden');
+        document.getElementById('adm-sub-'+sub).classList.remove('hidden');
+        if(sub === 'central') renderCentral();
+        if(sub === 'items') renderAdmShop();
+        if(sub === 'players') renderAdminPlayers();
+    }
 
-        document.getElementById('gold-nav').innerText = logado.gold + " 🪙";
-        
-        if(!visualizandoId) {
-            renderFicha(logado, false);
-        } else {
-            const target = DB('c_users').find(u => u.id === visualizandoId);
-            if(target) renderFicha(target, true);
-        }
-        
+    function backToAdm() {
+        ['items','players','notify','central'].forEach(s => document.getElementById('adm-sub-'+s).classList.add('hidden'));
+        document.getElementById('adm-main-menu').classList.remove('hidden');
+    }
+
+    // --- RENDERIZADORES ---
+
+    function sync() {
+        if(!logado || visualizandoId) return;
+        renderFicha(logado, false); 
         renderInv(); 
         renderLoja(); 
         renderReino();
-        if(logado.isAdmin) renderCentral();
-    }
-
-    function rollDice(faces) {
-        const result = Math.floor(Math.random() * faces) + 1;
-        let c = DB('c_chat');
-        c.push({n: "SISTEMA", t: `🎲 **${logado.nick}** rolou 1d${faces} e tirou: **${result}**`});
-        SAVE('c_chat', c);
-        loadChat();
+        if(logado.isAdmin) { renderCentral(); }
+        document.getElementById('gold-nav').innerText = logado.gold + " 🪙";
     }
 
     function renderFicha(user, isOutro) {
         document.getElementById('p-nick').innerText = user.nick;
         document.getElementById('p-img').src = user.avatar || 'https://via.placeholder.com/250';
+        document.getElementById('p-token').src = user.token || '';
+        document.getElementById('p-token').style.display = user.token ? 'block' : 'none';
         document.getElementById('p-points').innerText = user.points;
-        document.getElementById('p-classe-in').value = user.ficha.classe;
-        document.getElementById('p-hist-in').value = user.ficha.hist;
-        
-        const admPanel = document.getElementById('p-adm-controls');
-        const editMsg = document.getElementById('admin-editing-msg');
-        
-        if(mestreEditando) {
-            admPanel.classList.remove('hidden');
-            editMsg.classList.remove('hidden');
-            document.getElementById('p-adm-gold').value = user.gold;
-            document.getElementById('p-adm-points').value = user.points;
-        } else {
-            admPanel.classList.add('hidden');
-            editMsg.classList.add('hidden');
-        }
-
         let h = "";
         for(let a in user.attrs) {
-            h += `<div style="margin-bottom:5px">${a.toUpperCase()}: <b>${user.attrs[a]}</b> 
-            ${(!isOutro || mestreEditando) ? `<button onclick="modA('${a}')" style="background:none; border:none; color:var(--gold); cursor:pointer"> [+]</button>` : ''}</div>`;
+            h += `<div style="font-size:14px; margin-bottom:5px">${a.toUpperCase()}: <b>${user.attrs[a]}</b> ${!isOutro ? `<button onclick="modA('${a}')" style="color:var(--gold); background:none; border:none; cursor:pointer; font-weight:bold; margin-left:10px">+</button>` : ''}</div>`;
         }
         document.getElementById('p-attrs').innerHTML = h;
-    }
-
-    function modA(a) {
-        let us = DB('c_users');
-        let target = mestreEditando ? us.find(u => u.id === visualizandoId) : us.find(u => u.id === logado.id);
-        
-        if(mestreEditando || target.points > 0) {
-            target.attrs[a]++;
-            if(!mestreEditando) target.points--;
-            SAVE('c_users', us);
-            if(!mestreEditando) logado = target;
-            renderFicha(target, mestreEditando);
-        } else {
-            showToast("Sem pontos disponíveis!");
-        }
-    }
-
-    function saveFicha() {
-        let us = DB('c_users');
-        let target = mestreEditando ? us.find(u => u.id === visualizandoId) : us.find(u => u.id === logado.id);
-        target.ficha.classe = document.getElementById('p-classe-in').value;
-        target.ficha.hist = document.getElementById('p-hist-in').value;
-        SAVE('c_users', us);
-        if(!mestreEditando) logado = target;
-    }
-
-    function admOverride() {
-        if(!mestreEditando) return;
-        let us = DB('c_users');
-        let idx = us.findIndex(u => u.id === visualizandoId);
-        us[idx].gold = parseInt(document.getElementById('p-adm-gold').value) || 0;
-        us[idx].points = parseInt(document.getElementById('p-adm-points').value) || 0;
-        SAVE('c_users', us);
-        showToast("Atributos de mestre salvos!");
-    }
-
-    function verPerfilMestre(id) {
-        visualizandoId = id;
-        mestreEditando = true;
-        const target = DB('c_users').find(u => u.id === id);
-        renderFicha(target, true);
-        document.getElementById('btn-voltar-meu').classList.remove('hidden');
-        switchTab('perfil', document.getElementById('nav-perfil'));
-    }
-
-    function voltarAoMeuPerfil() {
-        visualizandoId = null;
-        mestreEditando = false;
-        document.getElementById('btn-voltar-meu').classList.add('hidden');
-        sync();
-    }
-
-    function openAdmSub(sub) {
-        document.getElementById('adm-main-menu').classList.add('hidden');
-        document.getElementById('adm-sub-'+sub).classList.remove('hidden');
-        if(sub === 'players') renderAdminPlayers();
-        if(sub === 'central') renderCentral();
-    }
-
-    function backToAdm() {
-        ['players','notify','central','items'].forEach(s => {
-            const el = document.getElementById('adm-sub-'+s);
-            if(el) el.classList.add('hidden');
-        });
-        document.getElementById('adm-main-menu').classList.remove('hidden');
-    }
-
-    function renderAdminPlayers() {
-        document.getElementById('adm-players-list').innerHTML = DB('c_users').map(u => `
-            <div style="background:rgba(255,255,255,0.05); padding:15px; margin-bottom:10px; border-radius:10px; display:flex; justify-content:space-between; align-items:center">
-                <span><b>${u.nick}</b> (${u.gold}G / ${u.points}pts)</span>
-                <button class="btn btn-gold" onclick="verPerfilMestre(${u.id})">GERENCIAR PERFIL</button>
-            </div>`).join('');
-    }
-
-    function sendChat() {
-        const inp = document.getElementById('chat-in');
-        if(!inp.value) return;
-        let c = DB('c_chat');
-        c.push({n: logado.nick, t: inp.value});
-        SAVE('c_chat', c);
-        inp.value = "";
-        loadChat();
-    }
-
-    function loadChat() {
-        const w = document.getElementById('chat-window');
-        w.innerHTML = DB('c_chat').map(m => `<div><b>${m.n}:</b> ${m.t}</div>`).join('');
-        w.scrollTop = w.scrollHeight;
-    }
-
-    function showToast(m) {
-        const c = document.getElementById('toast-container');
-        const t = document.createElement('div');
-        t.className='toast'; t.innerText=m;
-        c.appendChild(t);
-        setTimeout(()=>t.remove(),3000);
+        document.getElementById('p-classe-in').value = user.ficha.classe;
+        document.getElementById('p-hist-in').value = user.ficha.hist;
     }
 
     function renderInv() {
-        document.getElementById('inv-list').innerHTML = logado.items.map(it => `
-            <div class="compact-card"><b>${it.nome}</b></div>
-        `).join('');
+        document.getElementById('inv-list').innerHTML = logado.items.map(it => `<div class="compact-card">${it.status==='pendente'?'<div class="badge-pending">PENDENTE</div>':''}<img src="${it.img||'https://via.placeholder.com/100'}"><b>${it.nome}</b></div>`).join('');
     }
 
     function renderLoja() {
+        document.getElementById('shop-grid').innerHTML = DB('c_items').map((it, i) => `<div class="compact-card"><img src="${it.img||'https://via.placeholder.com/150'}"><b>${it.nome}</b><br><span>${it.preco} 🪙</span><br><button class="btn btn-gold" onclick="comprar(${i})">Comprar</button></div>`).join('');
+    }
+
+    function renderReino() {
+        document.getElementById('reino-list').innerHTML = DB('c_users').map(u => `<div class="compact-card" onclick="verPerfilReino(${u.id})"><img src="${u.avatar||'https://via.placeholder.com/150'}"><b>${u.nick}</b></div>`).join('');
+    }
+
+    // --- FUNÇÕES ADMIN ---
+
+    function renderAdmShop() {
         const items = DB('c_items');
-        document.getElementById('shop-grid').innerHTML = items.map((it, i) => `
-            <div class="compact-card">
-                <b>${it.nome}</b><br>${it.preco}G<br>
-                <button class="btn btn-gold" onclick="comprarItem(${i})">Comprar</button>
+        document.getElementById('adm-shop-items').innerHTML = items.map((it, i) => `
+            <div style="background:#222; padding:10px; margin-bottom:5px; border-radius:5px; display:flex; justify-content:space-between; align-items:center">
+                <span>${it.nome} (${it.preco}G)</span>
+                <button class="btn btn-red" onclick="removerItemLoja(${i})">X</button>
             </div>
         `).join('');
-    }
-
-    function comprarItem(idx) {
-        let items = DB('c_items');
-        let item = items[idx];
-        if(logado.gold >= item.preco) {
-            let us = DB('c_users');
-            let uIdx = us.findIndex(u => u.id === logado.id);
-            us[uIdx].gold -= item.preco;
-            us[uIdx].items.push(item);
-            SAVE('c_users', us);
-            logado = us[uIdx];
-            showToast("Item comprado!");
-            sync();
-        } else {
-            showToast("Ouro insuficiente!");
-        }
-    }
-
-    function openForja() { document.getElementById('modal-forja').classList.toggle('hidden'); }
-
-    function proporItem() {
-        const nome = document.getElementById('f-item-nome').value;
-        if(!nome) return;
-        let p = DB('c_pedidos');
-        p.push({user: logado.nick, userId: logado.id, item: nome, status: 'pendente'});
-        SAVE('c_pedidos', p);
-        document.getElementById('f-item-nome').value = "";
-        openForja();
-        showToast("Pedido enviado ao mestre!");
-    }
-
-    function renderCentral() {
-        const p = DB('c_pedidos');
-        document.getElementById('adm-central-list').innerHTML = p.map((ped, i) => `
-            <div style="background:rgba(255,255,255,0.05); padding:10px; margin-bottom:5px; border-radius:5px">
-                <b>${ped.user}</b> quer forjar: <b>${ped.item}</b>
-                <button class="btn btn-gold" onclick="concluirForja(${i})">APROVAR</button>
-            </div>
-        `).join('');
-    }
-
-    function concluirForja(idx) {
-        let p = DB('c_pedidos');
-        let ped = p[idx];
-        let us = DB('c_users');
-        let uIdx = us.findIndex(u => u.id === ped.userId);
-        if(uIdx !== -1) {
-            us[uIdx].items.push({nome: ped.item});
-            SAVE('c_users', us);
-            p.splice(idx, 1);
-            SAVE('c_pedidos', p);
-            showToast("Item entregue ao jogador!");
-            renderCentral();
-        }
     }
 
     function admSalvarItem() {
         const n = document.getElementById('adm-in-nome').value;
-        const p = parseInt(document.getElementById('adm-in-preco').value);
-        if(!n || !p) return;
-        let it = DB('c_items');
-        it.push({nome: n, preco: p});
-        SAVE('c_items', it);
-        showToast("Item adicionado à loja!");
-        renderLoja();
-    }
-
-    function renderReino() {
-        document.getElementById('reino-list').innerHTML = DB('c_users').map(u => `
-            <div class="compact-card" onclick="verPerfilReino(${u.id})">
-                <b>${u.nick}</b><br><small>${u.ficha.classe}</small>
-            </div>
-        `).join('');
-    }
-
-    function verPerfilReino(id) {
-        visualizandoId = id;
-        mestreEditando = false;
-        const h = DB('c_users').find(u => u.id === id);
-        renderFicha(h, true);
-        document.getElementById('btn-voltar-meu').classList.remove('hidden');
-        switchTab('perfil', document.getElementById('nav-perfil'));
-    }
-
-    function upload(input, tipo) {
-        const r = new FileReader();
-        r.onload = (e) => {
-            let us = DB('c_users');
-            let idx = us.findIndex(x => x.id === logado.id);
-            us[idx].avatar = e.target.result;
-            SAVE('c_users', us);
-            logado.avatar = e.target.result;
-            sync();
+        const p = document.getElementById('adm-in-preco').value;
+        const img = document.getElementById('adm-in-img').files[0];
+        if(!n || !p) return showToast("Preencha nome e preço!");
+        
+        let its = DB('c_items');
+        const proc = (data) => {
+            its.push({nome: n, preco: parseInt(p), img: data || ''});
+            SAVE('c_items', its);
+            renderAdmShop();
+            showToast("Item adicionado!");
         };
-        r.readAsDataURL(input.files[0]);
+        if(img) { 
+            const r = new FileReader(); 
+            r.onload = (e) => proc(e.target.result); 
+            r.readAsDataURL(img); 
+        } else proc();
+    }
+
+    function removerItemLoja(idx) {
+        let its = DB('c_items');
+        its.splice(idx, 1);
+        SAVE('c_items', its);
+        renderAdmShop();
+    }
+
+    function renderAdminPlayers() {
+        document.getElementById('adm-players-list').innerHTML = DB('c_users').map((u, i) => `
+            <div style="background:rgba(255,255,255,0.05); padding:15px; margin-bottom:15px; border-radius:10px; border-left: 4px solid var(--gold)">
+                <div style="display:flex; justify-content:space-between; align-items:center">
+                    <div><b>${u.nick}</b></div>
+                    <div style="display:flex; gap:10px; align-items:center">
+                        <button class="btn btn-red" onclick="admModPoints(${i}, -1)">- PTR</button>
+                        <span>${u.points} pts</span>
+                        <button class="btn btn-gold" onclick="admModPoints(${i}, 1)">+ PTR</button>
+                        <input type="number" style="width:80px" value="${u.gold}" onchange="admModGold(${i}, this.value)"> 🪙
+                    </div>
+                </div>
+            </div>`).join('');
+    }
+
+    function admModPoints(uIdx, valor) {
+        let us = DB('c_users');
+        us[uIdx].points += valor;
+        SAVE('c_users', us);
+        renderAdminPlayers();
+    }
+
+    function admModGold(uIdx, val) {
+        let us = DB('c_users');
+        us[uIdx].gold = parseInt(val);
+        SAVE('c_users', us);
+        showToast("Ouro atualizado!");
+    }
+
+    function renderCentral() {
+        const users = DB('c_users');
+        let html = "";
+        let count = 0;
+        users.forEach((u, uIdx) => {
+            u.items.forEach((it, iIdx) => {
+                if(it.status === 'pendente') {
+                    count++;
+                    html += `
+                        <div class="notif-item">
+                            <div><strong>${u.nick}</strong> quer forjar: <strong>${it.nome}</strong></div>
+                            <div style="display:flex; gap:10px">
+                                <button class="btn btn-gold" onclick="admAprovarItem(${uIdx}, ${iIdx})">APROVAR</button>
+                                <button class="btn btn-red" onclick="admNegarItem(${uIdx}, ${iIdx})">NEGAR</button>
+                            </div>
+                        </div>`;
+                }
+            });
+        });
+        document.getElementById('adm-central-list').innerHTML = html || "<p>Nenhum pedido.</p>";
+        const bNav = document.getElementById('adm-badge-nav');
+        const bMenu = document.getElementById('adm-badge-central');
+        if(count > 0) { bNav.innerText = count; bNav.classList.remove('hidden'); bMenu.innerText = count; bMenu.classList.remove('hidden'); }
+        else { bNav.classList.add('hidden'); bMenu.classList.add('hidden'); }
+    }
+
+    function admAprovarItem(uIdx, iIdx) {
+        let us = DB('c_users');
+        us[uIdx].items[iIdx].status = 'aprovado';
+        SAVE('c_users', us);
+        renderCentral();
+        showToast("Aprovado!");
+    }
+
+    function admNegarItem(uIdx, iIdx) {
+        let us = DB('c_users');
+        us[uIdx].items.splice(iIdx, 1);
+        SAVE('c_users', us);
+        renderCentral();
+    }
+
+    // --- LÓGICA DE JOGO ---
+
+    function comprar(i) {
+        const its = DB('c_items');
+        if(logado.gold >= its[i].preco) {
+            logado.gold -= its[i].preco;
+            logado.items.push({...its[i], status: 'aprovado'});
+            new Audio('https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3').play();
+            saveState();
+            showToast("Item comprado!");
+        } else showToast("Ouro insuficiente!");
+    }
+
+    function modA(a) { 
+        if(logado.points > 0) { logado.attrs[a]++; logado.points--; saveState(); } 
+        else { showToast("Sem pontos de evolução!"); }
+    }
+
+    function saveState() {
+        let us = DB('c_users'); 
+        let idx = us.findIndex(x => x.id === logado.id);
+        us[idx] = logado; 
+        SAVE('c_users', us); 
+        sync();
+    }
+
+    function autoSync() {
+        if(!logado || visualizandoId) return;
+        const fresh = DB('c_users').find(u => u.id === logado.id);
+        if(fresh && JSON.stringify(fresh) !== JSON.stringify(logado)) {
+            logado = fresh;
+            sync();
+        }
+    }
+
+    function proporItem() {
+        const nome = document.getElementById('f-item-nome').value;
+        if(!nome) return showToast("Dê um nome!");
+        const imgInput = document.getElementById('f-item-img');
+        const proc = (data) => {
+            logado.items.push({nome: nome, img: data, status: 'pendente'});
+            saveState(); openForja(); showToast("Pedido enviado!");
+        };
+        if(imgInput.files[0]) {
+            const r = new FileReader(); r.onload = (e) => proc(e.target.result); r.readAsDataURL(imgInput.files[0]);
+        } else proc('');
+    }
+
+    function sendChat() { const inp = document.getElementById('chat-in'); if(!inp.value) return; let c = DB('c_chat'); c.push({n: logado.nick, t: inp.value}); SAVE('c_chat', c); inp.value = ""; loadChat(); }
+    function loadChat() { const w = document.getElementById('chat-window'); w.innerHTML = DB('c_chat').map(m => `<div><b>${m.n}:</b> ${m.t}</div>`).join(''); w.scrollTop = w.scrollHeight; }
+    function openForja() { document.getElementById('modal-forja').classList.toggle('hidden'); }
+
+    // --- SISTEMA DE NOTIFICAÇÃO ATUALIZADO ---
+
+    function sendGlobalNotif() {
+        const msg = document.getElementById('adm-notif-msg').value;
+        const bg = document.getElementById('adm-notif-bg').value;
+        const color = document.getElementById('adm-notif-color').value;
+        const sound = document.getElementById('adm-notif-sound').value;
+
+        if(msg) {
+            SAVE('global_notif', {
+                msg: msg, 
+                bg: bg, 
+                color: color, 
+                sound: sound,
+                time: Date.now()
+            });
+            showToast("Notificação Proclamada!");
+            document.getElementById('adm-notif-msg').value = "";
+        }
     }
 
     function checkNotif() {
         const n = DB('global_notif');
         if(n && n.time > (window.lastNotif || 0)) {
             window.lastNotif = n.time;
-            new Audio(n.sound).play().catch(() => {});
+            
+            // Toca o som escolhido
+            const audio = new Audio(n.sound);
+            audio.play().catch(e => console.log("Erro som:", e));
+
             const bar = document.getElementById('notify-bar');
-            bar.innerText = n.msg;
+            bar.innerText = "📣 " + n.msg;
+            
+            // Aplica as cores personalizadas
             bar.style.background = n.bg;
+            bar.style.color = n.color;
+            
             bar.style.top = "0";
             setTimeout(() => bar.style.top = "-100px", 7000);
         }
     }
 
-    function sendGlobalNotif() {
-        const msg = document.getElementById('adm-notif-msg').value;
-        if(msg) {
-            SAVE('global_notif', {
-                msg: msg, 
-                bg: document.getElementById('adm-notif-bg').value, 
-                sound: document.getElementById('adm-notif-sound').value, 
-                time: Date.now()
-            });
-            showToast("Proclamação feita!");
-        }
-    }
-
-    function autoSync() {
-        if(!logado || visualizandoId) return;
-        const updated = DB('c_users').find(u => u.id === logado.id);
-        if(JSON.stringify(updated) !== JSON.stringify(logado)) {
-            logado = updated;
-            sync();
-        }
-    }
-
-    function criarConta() {
-        const u = document.getElementById('l-user').value;
-        const p = document.getElementById('l-pass').value;
-        if(!u || !p) return alert("Preencha usuário e senha.");
-        let us = DB('c_users');
-        if(us.find(x => x.login === u)) return alert("Usuário já existe!");
-        us.push({id: Date.now(), login: u, nick: u, pass: p, isAdmin: false, gold: 100, points: 5, avatar: '', token: '', attrs: {for:1, agi:1, int:1, vig:1}, items: [], ficha: {classe: 'Aventureiro', hist: ''}});
-        SAVE('c_users', us);
-        alert("Conta criada com sucesso!");
-    }
+    function verPerfilReino(id) { visualizandoId = id; const h = DB('c_users').find(u => u.id === id); if(h) { renderFicha(h, true); document.getElementById('btn-voltar-meu').classList.remove('hidden'); switchTab('perfil', document.getElementById('nav-perfil')); } }
+    function voltarAoMeuPerfil() { visualizandoId = null; document.getElementById('btn-voltar-meu').classList.add('hidden'); sync(); }
+    function mudarNome() { const n = prompt("Novo nome:", logado.nick); if(n) { logado.nick = n; saveState(); } }
+    function saveFicha() { logado.ficha.classe = document.getElementById('p-classe-in').value; logado.ficha.hist = document.getElementById('p-hist-in').value; saveState(); }
+    function upload(input, tipo) { const r = new FileReader(); r.onload = (e) => { if(tipo === 'avatar') logado.avatar = e.target.result; else logado.token = e.target.result; saveState(); }; r.readAsDataURL(input.files[0]); }
+    function criarConta() { const u = document.getElementById('l-user').value.trim(); const p = document.getElementById('l-pass').value.trim(); if(!u || !p) return showToast("Preencha tudo!"); let us = DB('c_users'); us.push({id: Date.now(), login: u, nick: u, pass: p, isAdmin: false, gold: 100, points: 5, avatar: '', token: '', attrs: {for:1, agi:1, int:1, vig:1}, items: [], ficha: {classe: 'Aventureiro', hist: ''}}); SAVE('c_users', us); showToast("Conta criada!"); }
 </script>
 </body>
 </html>
