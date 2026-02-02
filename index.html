@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cavaleria RPG - Pro</title>
+    <style>
+        :root {
+            --gold: #c4a47c;
+            --gold-bright: #ffcc66;
+            --red: #ff4655;
+            --glass: rgba(0, 0, 0, 0.95);
+            --card-bg: rgba(30, 30, 30, 0.98);
+            --border: 1px solid rgba(196, 164, 124, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        
+        body {
+            height: 100vh; width: 100vw;
+            background: url('https://c4.wallpaperflare.com/wallpaper/158/52/964/portal-ruins-the-portal-rpg-wallpaper-preview.jpg') no-repeat center center fixed;
+            background-size: cover; color: white; overflow: hidden;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Notificações */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 3000; }
+        .toast { background: var(--glass); border: 1px solid var(--gold); color: white; padding: 12px 25px; border-radius: 5px; font-size: 13px; font-weight: bold; animation: slideIn 0.3s ease-out forwards; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        #notify-bar {
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+            padding: 15px 40px; border-radius: 0 0 10px 10px; font-weight: bold; z-index: 2000;
+            transition: 0.5s; box-shadow: 0 0 20px rgba(0,0,0,0.5); text-align: center; min-width: 300px;
+        }
+
+        /* Navbar */
+        .navbar { display: flex; background: #000; height: 65px; align-items: center; padding: 0 30px; border-bottom: 2px solid var(--gold); position: relative; z-index: 100; }
+        .nav-tabs { display: flex; gap: 15px; flex: 1; }
+        .nav-link { color: #888; text-transform: uppercase; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.3s; padding: 5px 10px; position: relative; }
+        .nav-link.active { color: var(--gold-bright); border-bottom: 2px solid var(--gold-bright); }
+        .badge-count { position: absolute; top: -5px; right: -5px; background: var(--red); color: white; font-size: 9px; padding: 2px 6px; border-radius: 10px; }
+
+        /* Botão Sair Reformulado */
+        .btn-logout {
+            background: linear-gradient(45deg, #441111, var(--red));
+            color: white; border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 18px; border-radius: 4px; cursor: pointer;
+            font-size: 11px; font-weight: bold; letter-spacing: 1px;
+            transition: 0.3s; box-shadow: 0 0 10px rgba(255, 70, 85, 0.3);
+        }
+        .btn-logout:hover { transform: scale(1.05); box-shadow: 0 0 15px var(--red); }
+
+        /* Layout */
+        .main-content { height: calc(100vh - 65px); display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .portal-container { background: var(--glass); border: var(--border); padding: 25px; border-radius: 12px; width: 100%; max-width: 1100px; max-height: 85vh; overflow-y: auto; backdrop-filter: blur(15px); }
+
+        /* Dados */
+        .dice-bar { display: flex; gap: 10px; margin-bottom: 15px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px; justify-content: center; }
+        .dice-btn { background: #222; border: 1px solid var(--gold); color: var(--gold); padding: 8px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .dice-btn:hover { background: var(--gold); color: black; }
+
+        /* Grids */
+        .compact-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+        .compact-card { background: var(--card-bg); border: 1px solid #444; border-radius: 6px; overflow: hidden; text-align: center; padding-bottom: 8px; transition: 0.3s; cursor: pointer; }
+        .compact-card img { width: 100%; height: 100px; object-fit: cover; }
+
+        input, textarea, select { background: #111; border: 1px solid #444; color: white; padding: 10px; border-radius: 4px; width: 100%; margin: 5px 0; }
+        .btn { padding: 8px 15px; cursor: pointer; border: none; font-weight: bold; border-radius: 4px; text-transform: uppercase; font-size: 10px; }
+        .btn-gold { background: var(--gold); color: black; }
+        .btn-red { background: var(--red); color: white; }
+        .adm-btn-large { background: #111; border: 1px solid var(--gold); padding: 30px 20px; text-align: center; cursor: pointer; border-radius: 10px; transition: 0.3s; font-weight: bold; }
+        .token-circle { position: absolute; bottom: -10px; right: -10px; width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--gold); background: #000; object-fit: cover; }
+        #chat-window { height: 280px; background: rgba(0,0,0,0.6); border: 1px solid #333; overflow-y: auto; padding: 15px; margin-bottom: 10px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+<div id="toast-container"></div>
+<div id="notify-bar">NOTIFICAÇÃO!</div>
+
+<nav id="main-nav" class="navbar hidden">
+    <div class="nav-tabs">
+        <div class="nav-link active" id="nav-perfil" onclick="switchTab('perfil', this)">Herói</div>
+        <div class="nav-link" onclick="switchTab('loja', this)">Loja</div> 
+        <div class="nav-link" onclick="switchTab('inv', this)">Mochila</div>
+        <div class="nav-link" onclick="switchTab('social', this)">Reino</div>
+        <div class="nav-link" onclick="switchTab('chat', this)">Chat</div>
+        <div id="nav-admin" class="nav-link hidden" onclick="switchTab('admin', this)">
+            👑 Mestre <span id="adm-badge-nav" class="badge-count hidden">0</span>
+        </div>
+    </div>
+    <div style="display:flex; gap:15px; align-items:center;">
+        <span id="gold-nav" style="color:var(--gold-bright); font-weight:bold;">0 🪙</span>
+        <button class="btn-logout" onclick="logout()">LOGOUT</button>
+    </div>
+</nav>
+
+<div class="main-content">
+    <div id="screen-login" class="portal-container" style="max-width: 400px; text-align: center;">
+        <h1 style="color:var(--gold-bright); margin-bottom:20px; letter-spacing: 5px;">CAVALERIA</h1>
+        <input type="text" id="l-user" placeholder="Usuário">
+        <input type="password" id="l-pass" placeholder="Senha">
+        <button class="btn btn-gold" style="width:100%; padding:15px" onclick="tentarLogin()">ENTRAR NO REINO</button>
+        <button class="btn" style="width:100%; margin-top:10px; background:transparent; color:var(--gold); border:1px solid var(--gold)" onclick="criarConta()">CRIAR NOVA CONTA</button>
+    </div>
+
+    <div id="screen-game" class="portal-container hidden">
+        
+        <div id="tab-perfil">
+            <div id="admin-editing-msg" class="hidden" style="background:var(--red); color:white; padding:5px; text-align:center; margin-bottom:10px; border-radius:5px; font-weight:bold; font-size:12px">MODO MESTRE: VOCÊ ESTÁ EDITANDO ESTE JOGADOR</div>
+            <button id="btn-voltar-meu" class="btn btn-gold hidden" style="margin-bottom: 15px;" onclick="voltarAoMeuPerfil()">⬅ VOLTAR PARA MEU PERFIL</button>
+            <div style="display: grid; grid-template-columns: 300px 1fr; gap: 30px;">
+                <div style="text-align:center">
+                    <div style="position:relative; display:inline-block">
+                        <img id="p-img" style="width:280px; height:340px; border-radius:8px; border:2px solid #444; object-fit:cover">
+                        <img id="p-token" class="token-circle" style="display:none">
+                    </div>
+                    <div id="p-edit-area" style="margin-top:20px; display: grid; gap: 5px;">
+                        <button class="btn btn-gold" onclick="document.getElementById('up-img').click()">FOTO PERFIL</button>
+                        <input type="file" id="up-img" class="hidden" onchange="upload(this, 'avatar')">
+                    </div>
+                </div>
+                <div>
+                    <h1 id="p-nick" style="color:var(--gold-bright); font-size: 2.2rem;"></h1>
+                    <div id="p-adm-controls" class="hidden" style="margin: 10px 0; display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                        <div>Ouro: <input type="number" id="p-adm-gold" style="width:80px" onchange="admOverride()"></div>
+                        <div>Pontos: <input type="number" id="p-adm-points" style="width:80px" onchange="admOverride()"></div>
+                    </div>
+                    <div style="margin: 15px 0;">
+                        <label style="font-size:10px; color:var(--gold)">CLASSE</label>
+                        <input type="text" id="p-classe-in" onchange="saveFicha()">
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                        <div id="p-attrs"></div>
+                        <div>
+                             <h3 style="font-size:12px; color:var(--gold)">PONTOS DISPONÍVEIS: <span id="p-points">0</span></h3>
+                        </div>
+                    </div>
+                    <label style="font-size:10px; color:var(--gold); margin-top:15px; display:block">HISTÓRIA</label>
+                    <textarea id="p-hist-in" rows="5" onchange="saveFicha()"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-chat" class="hidden">
+            <div class="dice-bar">
+                <button class="dice-btn" onclick="rollDice(4)">d4</button>
+                <button class="dice-btn" onclick="rollDice(6)">d6</button>
+                <button class="dice-btn" onclick="rollDice(8)">d8</button>
+                <button class="dice-btn" onclick="rollDice(10)">d10</button>
+                <button class="dice-btn" onclick="rollDice(12)">d12</button>
+                <button class="dice-btn" onclick="rollDice(20)">d20</button>
+            </div>
+            <div id="chat-window"></div>
+            <div style="display:flex; gap:10px">
+                <input type="text" id="chat-in" placeholder="Digite sua mensagem..." onkeypress="if(event.key==='Enter') sendChat()">
+                <button class="btn btn-gold" onclick="sendChat()">ENVIAR</button>
+            </div>
+        </div>
+
+        <div id="tab-inv" class="hidden">
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px">
+                <h2>🎒 Mochila</h2>
+                <button class="btn btn-gold" onclick="openForja()">FORJAR NOVO ITEM</button>
+            </div>
+            <div id="modal-forja" class="hidden" style="background:rgba(255,255,255,0.05); padding:15px; border-radius:10px; margin-bottom:20px; border:1px solid var(--gold)">
+                <input type="text" id="f-item-nome" placeholder="Nome do Item">
+                <button class="btn btn-gold" onclick="proporItem()">ENVIAR AO MESTRE</button>
+            </div>
+            <div id="inv-list" class="compact-grid"></div>
+        </div>
+
+        <div id="tab-loja" class="hidden">
+            <h2 style="text-align:center; margin-bottom:20px">MERCADO DO REINO</h2>
+            <div id="shop-grid" class="compact-grid"></div>
+        </div>
+
+        <div id="tab-social" class="hidden">
+            <h2>Habitantes</h2>
+            <div id="reino-list" class="compact-grid"></div>
+        </div>
+
+        <div id="tab-admin" class="hidden">
+            <div id="adm-main-menu" class="adm-dashboard" style="display:grid; grid-template-columns: 1fr 1fr; gap:20px">
+                <div class="adm-btn-large" onclick="openAdmSub('players')">GERENCIAR JOGADORES</div>
+                <div class="adm-btn-large" onclick="openAdmSub('central')">PEDIDOS E FORJA</div>
+                <div class="adm-btn-large" onclick="openAdmSub('notify')">NOTIFICAÇÕES</div>
+                <div class="adm-btn-large" onclick="openAdmSub('items')">CRIAR ITENS</div>
+            </div>
+
+            <div id="adm-sub-players" class="hidden">
+                <button class="btn btn-gold" onclick="backToAdm()">< Voltar</button>
+                <div id="adm-players-list" style="margin-top:20px"></div>
+            </div>
+
+            <div id="adm-sub-notify" class="hidden">
+                <button class="btn btn-gold" onclick="backToAdm()">< Voltar</button>
+                <div style="max-width:500px; margin:20px auto; background:rgba(255,255,255,0.05); padding:20px; border-radius:10px">
+                    <input type="text" id="adm-notif-msg" placeholder="Mensagem...">
+                    <input type="color" id="adm-notif-bg" value="#c4a47c">
+                    <select id="adm-notif-sound">
+                        <option value="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3">🔔 Notificação</option>
+                        <option value="https://assets.mixkit.co/active_storage/sfx/951/951-preview.mp3">⚠️ Alerta</option>
+                    </select>
+                    <button class="btn btn-gold" style="width:100%" onclick="sendGlobalNotif()">PROCLAMAR</button>
+                </div>
+            </div>
+
+            <div id="adm-sub-central" class="hidden">
+                <button class="btn btn-gold" onclick="backToAdm()">< Voltar</button>
+                <div id="adm-central-list" style="margin-top:20px"></div>
+            </div>
+            
+            <div id="adm-sub-items" class="hidden">
+                <button class="btn btn-gold" onclick="backToAdm()">< Voltar</button>
+                <div style="margin-top:20px">
+                    <input type="text" id="adm-in-nome" placeholder="Nome Item">
+                    <input type="number" id="adm-in-preco" placeholder="Preço">
+                    <button class="btn btn-gold" onclick="admSalvarItem()">ADICIONAR À LOJA</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let logado = null;
+    let visualizandoId = null;
+    let mestreEditando = false;
+
+    const DB = (k) => JSON.parse(localStorage.getItem(k)) || [];
+    const SAVE = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+
+    function init() {
+        if(!DB('c_users').find(u => u.login === 'mestre')) {
+            SAVE('c_users', [{id: 999, login:'mestre', nick:'Mestre Supremo', pass:'123', isAdmin:true, gold:999, points:0, avatar:'', token:'', attrs:{for:1,agi:1,int:1,vig:1}, items:[], ficha:{classe:'Mestre', hist:''}}]);
+        }
+        setInterval(checkNotif, 2000);
+        setInterval(loadChat, 3000);
+        setInterval(autoSync, 4000);
+    }
+    init();
+
+    function tentarLogin() {
+        const u = document.getElementById('l-user').value.trim().toLowerCase();
+        const p = document.getElementById('l-pass').value.trim();
+        const users = DB('c_users');
+        const found = users.find(x => x.login.toLowerCase() === u && x.pass === p);
+        if(found) { logado = found; entrarNoJogo(); } else alert("Erro: Usuário ou senha incorretos.");
+    }
+
+    function entrarNoJogo() {
+        document.getElementById('screen-login').classList.add('hidden');
+        document.getElementById('screen-game').classList.remove('hidden');
+        document.getElementById('main-nav').classList.remove('hidden');
+        if(logado.isAdmin) document.getElementById('nav-admin').classList.remove('hidden');
+        sync();
+    }
+
+    function logout() { location.reload(); }
+
+    function switchTab(t, btn) {
+        if(t !== 'perfil') { visualizandoId = null; mestreEditando = false; }
+        document.querySelectorAll('.nav-link').forEach(x => x.classList.remove('active'));
+        if(btn) btn.classList.add('active');
+        ['perfil','loja','inv','social','chat','admin'].forEach(x => {
+            const el = document.getElementById('tab-'+x);
+            if(el) el.classList.add('hidden');
+        });
+        document.getElementById('tab-'+t).classList.remove('hidden');
+        sync();
+    }
+
+    function sync() {
+        if(!logado) return;
+        // Pega versão mais recente do usuário logado
+        const currentData = DB('c_users').find(u => u.id === logado.id);
+        if(currentData) logado = currentData;
+
+        document.getElementById('gold-nav').innerText = logado.gold + " 🪙";
+        
+        if(!visualizandoId) {
+            renderFicha(logado, false);
+        } else {
+            const target = DB('c_users').find(u => u.id === visualizandoId);
+            if(target) renderFicha(target, true);
+        }
+        
+        renderInv(); 
+        renderLoja(); 
+        renderReino();
+        if(logado.isAdmin) renderCentral();
+    }
+
+    function rollDice(faces) {
+        const result = Math.floor(Math.random() * faces) + 1;
+        let c = DB('c_chat');
+        c.push({n: "SISTEMA", t: `🎲 **${logado.nick}** rolou 1d${faces} e tirou: **${result}**`});
+        SAVE('c_chat', c);
+        loadChat();
+    }
+
+    function renderFicha(user, isOutro) {
+        document.getElementById('p-nick').innerText = user.nick;
+        document.getElementById('p-img').src = user.avatar || 'https://via.placeholder.com/250';
+        document.getElementById('p-points').innerText = user.points;
+        document.getElementById('p-classe-in').value = user.ficha.classe;
+        document.getElementById('p-hist-in').value = user.ficha.hist;
+        
+        const admPanel = document.getElementById('p-adm-controls');
+        const editMsg = document.getElementById('admin-editing-msg');
+        
+        if(mestreEditando) {
+            admPanel.classList.remove('hidden');
+            editMsg.classList.remove('hidden');
+            document.getElementById('p-adm-gold').value = user.gold;
+            document.getElementById('p-adm-points').value = user.points;
+        } else {
+            admPanel.classList.add('hidden');
+            editMsg.classList.add('hidden');
+        }
+
+        let h = "";
+        for(let a in user.attrs) {
+            h += `<div style="margin-bottom:5px">${a.toUpperCase()}: <b>${user.attrs[a]}</b> 
+            ${(!isOutro || mestreEditando) ? `<button onclick="modA('${a}')" style="background:none; border:none; color:var(--gold); cursor:pointer"> [+]</button>` : ''}</div>`;
+        }
+        document.getElementById('p-attrs').innerHTML = h;
+    }
+
+    function modA(a) {
+        let us = DB('c_users');
+        let target = mestreEditando ? us.find(u => u.id === visualizandoId) : us.find(u => u.id === logado.id);
+        
+        if(mestreEditando || target.points > 0) {
+            target.attrs[a]++;
+            if(!mestreEditando) target.points--;
+            SAVE('c_users', us);
+            if(!mestreEditando) logado = target;
+            renderFicha(target, mestreEditando);
+        } else {
+            showToast("Sem pontos disponíveis!");
+        }
+    }
+
+    function saveFicha() {
+        let us = DB('c_users');
+        let target = mestreEditando ? us.find(u => u.id === visualizandoId) : us.find(u => u.id === logado.id);
+        target.ficha.classe = document.getElementById('p-classe-in').value;
+        target.ficha.hist = document.getElementById('p-hist-in').value;
+        SAVE('c_users', us);
+        if(!mestreEditando) logado = target;
+    }
+
+    function admOverride() {
+        if(!mestreEditando) return;
+        let us = DB('c_users');
+        let idx = us.findIndex(u => u.id === visualizandoId);
+        us[idx].gold = parseInt(document.getElementById('p-adm-gold').value) || 0;
+        us[idx].points = parseInt(document.getElementById('p-adm-points').value) || 0;
+        SAVE('c_users', us);
+        showToast("Atributos de mestre salvos!");
+    }
+
+    function verPerfilMestre(id) {
+        visualizandoId = id;
+        mestreEditando = true;
+        const target = DB('c_users').find(u => u.id === id);
+        renderFicha(target, true);
+        document.getElementById('btn-voltar-meu').classList.remove('hidden');
+        switchTab('perfil', document.getElementById('nav-perfil'));
+    }
+
+    function voltarAoMeuPerfil() {
+        visualizandoId = null;
+        mestreEditando = false;
+        document.getElementById('btn-voltar-meu').classList.add('hidden');
+        sync();
+    }
+
+    function openAdmSub(sub) {
+        document.getElementById('adm-main-menu').classList.add('hidden');
+        document.getElementById('adm-sub-'+sub).classList.remove('hidden');
+        if(sub === 'players') renderAdminPlayers();
+        if(sub === 'central') renderCentral();
+    }
+
+    function backToAdm() {
+        ['players','notify','central','items'].forEach(s => {
+            const el = document.getElementById('adm-sub-'+s);
+            if(el) el.classList.add('hidden');
+        });
+        document.getElementById('adm-main-menu').classList.remove('hidden');
+    }
+
+    function renderAdminPlayers() {
+        document.getElementById('adm-players-list').innerHTML = DB('c_users').map(u => `
+            <div style="background:rgba(255,255,255,0.05); padding:15px; margin-bottom:10px; border-radius:10px; display:flex; justify-content:space-between; align-items:center">
+                <span><b>${u.nick}</b> (${u.gold}G / ${u.points}pts)</span>
+                <button class="btn btn-gold" onclick="verPerfilMestre(${u.id})">GERENCIAR PERFIL</button>
+            </div>`).join('');
+    }
+
+    function sendChat() {
+        const inp = document.getElementById('chat-in');
+        if(!inp.value) return;
+        let c = DB('c_chat');
+        c.push({n: logado.nick, t: inp.value});
+        SAVE('c_chat', c);
+        inp.value = "";
+        loadChat();
+    }
+
+    function loadChat() {
+        const w = document.getElementById('chat-window');
+        w.innerHTML = DB('c_chat').map(m => `<div><b>${m.n}:</b> ${m.t}</div>`).join('');
+        w.scrollTop = w.scrollHeight;
+    }
+
+    function showToast(m) {
+        const c = document.getElementById('toast-container');
+        const t = document.createElement('div');
+        t.className='toast'; t.innerText=m;
+        c.appendChild(t);
+        setTimeout(()=>t.remove(),3000);
+    }
+
+    function renderInv() {
+        document.getElementById('inv-list').innerHTML = logado.items.map(it => `
+            <div class="compact-card"><b>${it.nome}</b></div>
+        `).join('');
+    }
+
+    function renderLoja() {
+        const items = DB('c_items');
+        document.getElementById('shop-grid').innerHTML = items.map((it, i) => `
+            <div class="compact-card">
+                <b>${it.nome}</b><br>${it.preco}G<br>
+                <button class="btn btn-gold" onclick="comprarItem(${i})">Comprar</button>
+            </div>
+        `).join('');
+    }
+
+    function comprarItem(idx) {
+        let items = DB('c_items');
+        let item = items[idx];
+        if(logado.gold >= item.preco) {
+            let us = DB('c_users');
+            let uIdx = us.findIndex(u => u.id === logado.id);
+            us[uIdx].gold -= item.preco;
+            us[uIdx].items.push(item);
+            SAVE('c_users', us);
+            logado = us[uIdx];
+            showToast("Item comprado!");
+            sync();
+        } else {
+            showToast("Ouro insuficiente!");
+        }
+    }
+
+    function openForja() { document.getElementById('modal-forja').classList.toggle('hidden'); }
+
+    function proporItem() {
+        const nome = document.getElementById('f-item-nome').value;
+        if(!nome) return;
+        let p = DB('c_pedidos');
+        p.push({user: logado.nick, userId: logado.id, item: nome, status: 'pendente'});
+        SAVE('c_pedidos', p);
+        document.getElementById('f-item-nome').value = "";
+        openForja();
+        showToast("Pedido enviado ao mestre!");
+    }
+
+    function renderCentral() {
+        const p = DB('c_pedidos');
+        document.getElementById('adm-central-list').innerHTML = p.map((ped, i) => `
+            <div style="background:rgba(255,255,255,0.05); padding:10px; margin-bottom:5px; border-radius:5px">
+                <b>${ped.user}</b> quer forjar: <b>${ped.item}</b>
+                <button class="btn btn-gold" onclick="concluirForja(${i})">APROVAR</button>
+            </div>
+        `).join('');
+    }
+
+    function concluirForja(idx) {
+        let p = DB('c_pedidos');
+        let ped = p[idx];
+        let us = DB('c_users');
+        let uIdx = us.findIndex(u => u.id === ped.userId);
+        if(uIdx !== -1) {
+            us[uIdx].items.push({nome: ped.item});
+            SAVE('c_users', us);
+            p.splice(idx, 1);
+            SAVE('c_pedidos', p);
+            showToast("Item entregue ao jogador!");
+            renderCentral();
+        }
+    }
+
+    function admSalvarItem() {
+        const n = document.getElementById('adm-in-nome').value;
+        const p = parseInt(document.getElementById('adm-in-preco').value);
+        if(!n || !p) return;
+        let it = DB('c_items');
+        it.push({nome: n, preco: p});
+        SAVE('c_items', it);
+        showToast("Item adicionado à loja!");
+        renderLoja();
+    }
+
+    function renderReino() {
+        document.getElementById('reino-list').innerHTML = DB('c_users').map(u => `
+            <div class="compact-card" onclick="verPerfilReino(${u.id})">
+                <b>${u.nick}</b><br><small>${u.ficha.classe}</small>
+            </div>
+        `).join('');
+    }
+
+    function verPerfilReino(id) {
+        visualizandoId = id;
+        mestreEditando = false;
+        const h = DB('c_users').find(u => u.id === id);
+        renderFicha(h, true);
+        document.getElementById('btn-voltar-meu').classList.remove('hidden');
+        switchTab('perfil', document.getElementById('nav-perfil'));
+    }
+
+    function upload(input, tipo) {
+        const r = new FileReader();
+        r.onload = (e) => {
+            let us = DB('c_users');
+            let idx = us.findIndex(x => x.id === logado.id);
+            us[idx].avatar = e.target.result;
+            SAVE('c_users', us);
+            logado.avatar = e.target.result;
+            sync();
+        };
+        r.readAsDataURL(input.files[0]);
+    }
+
+    function checkNotif() {
+        const n = DB('global_notif');
+        if(n && n.time > (window.lastNotif || 0)) {
+            window.lastNotif = n.time;
+            new Audio(n.sound).play().catch(() => {});
+            const bar = document.getElementById('notify-bar');
+            bar.innerText = n.msg;
+            bar.style.background = n.bg;
+            bar.style.top = "0";
+            setTimeout(() => bar.style.top = "-100px", 7000);
+        }
+    }
+
+    function sendGlobalNotif() {
+        const msg = document.getElementById('adm-notif-msg').value;
+        if(msg) {
+            SAVE('global_notif', {
+                msg: msg, 
+                bg: document.getElementById('adm-notif-bg').value, 
+                sound: document.getElementById('adm-notif-sound').value, 
+                time: Date.now()
+            });
+            showToast("Proclamação feita!");
+        }
+    }
+
+    function autoSync() {
+        if(!logado || visualizandoId) return;
+        const updated = DB('c_users').find(u => u.id === logado.id);
+        if(JSON.stringify(updated) !== JSON.stringify(logado)) {
+            logado = updated;
+            sync();
+        }
+    }
+
+    function criarConta() {
+        const u = document.getElementById('l-user').value;
+        const p = document.getElementById('l-pass').value;
+        if(!u || !p) return alert("Preencha usuário e senha.");
+        let us = DB('c_users');
+        if(us.find(x => x.login === u)) return alert("Usuário já existe!");
+        us.push({id: Date.now(), login: u, nick: u, pass: p, isAdmin: false, gold: 100, points: 5, avatar: '', token: '', attrs: {for:1, agi:1, int:1, vig:1}, items: [], ficha: {classe: 'Aventureiro', hist: ''}});
+        SAVE('c_users', us);
+        alert("Conta criada com sucesso!");
+    }
+</script>
+</body>
+</html>

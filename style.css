@@ -1,0 +1,327 @@
+:root {
+    --gold: #c4a47c;
+    --gold-bright: #ffcc66;
+    --red: #ff4655;
+    --glass: rgba(0, 0, 0, 0.95);
+    --card-bg: rgba(30, 30, 30, 0.98);
+    --border: 1px solid rgba(196, 164, 124, 0.3);
+    --notif-bg: #c4a47c;
+    --notif-text: #000000;
+}
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Segoe UI', sans-serif; 
+}
+
+body {
+    height: 100vh; 
+    width: 100vw;
+    background: url('https://c4.wallpaperflare.com/wallpaper/158/52/964/portal-ruins-the-portal-rpg-wallpaper-preview.jpg') no-repeat center center fixed;
+    background-size: cover; 
+    color: white; 
+    overflow: hidden;
+}
+
+.hidden { display: none !important; }
+
+/* Toasts e Notificações */
+#toast-container {
+    position: fixed; 
+    bottom: 20px; 
+    right: 20px;
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
+    z-index: 3000;
+}
+
+.toast {
+    background: var(--glass); 
+    border: 1px solid var(--gold);
+    color: white; 
+    padding: 12px 25px; 
+    border-radius: 5px;
+    font-size: 13px; 
+    font-weight: bold; 
+    text-transform: uppercase;
+    animation: slideIn 0.3s ease-out forwards;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+@keyframes slideIn { 
+    from { transform: translateX(100%); opacity: 0; } 
+    to { transform: translateX(0); opacity: 1; } 
+}
+
+#notify-bar {
+    position: fixed; 
+    top: -100px; 
+    left: 50%; 
+    transform: translateX(-50%);
+    background: var(--notif-bg); 
+    color: var(--notif-text); 
+    padding: 15px 40px;
+    border-radius: 0 0 10px 10px; 
+    font-weight: bold; 
+    z-index: 2000;
+    transition: 0.5s; 
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    text-align: center; 
+    min-width: 300px;
+}
+
+/* Navbar */
+.navbar {
+    display: flex; 
+    background: #000; 
+    height: 65px; 
+    align-items: center;
+    padding: 0 30px; 
+    border-bottom: 2px solid var(--gold); 
+    position: relative; 
+    z-index: 100;
+}
+
+.nav-tabs { 
+    display: flex; 
+    gap: 15px; 
+    flex: 1; 
+}
+
+.nav-link { 
+    color: #888; 
+    text-transform: uppercase; 
+    font-weight: bold; 
+    cursor: pointer; 
+    font-size: 12px; 
+    transition: 0.3s; 
+    padding: 5px 10px; 
+    position: relative; 
+}
+
+.nav-link.active { 
+    color: var(--gold-bright); 
+    border-bottom: 2px solid var(--gold-bright); 
+}
+
+.badge-count { 
+    position: absolute; 
+    top: -5px; 
+    right: -5px; 
+    background: var(--red); 
+    color: white; 
+    font-size: 9px; 
+    padding: 2px 6px; 
+    border-radius: 10px; 
+}
+
+/* Main Content */
+.main-content { 
+    height: calc(100vh - 65px); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    padding: 20px; 
+}
+
+.portal-container {
+    background: var(--glass); 
+    border: var(--border); 
+    padding: 25px;
+    border-radius: 12px; 
+    width: 100%; 
+    max-width: 1100px; 
+    max-height: 85vh;
+    overflow-y: auto; 
+    backdrop-filter: blur(15px); 
+    box-shadow: 0 0 40px rgba(0,0,0,1);
+}
+
+/* Grid e Cards */
+.adm-dashboard { 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 20px; 
+    margin-top: 30px; 
+}
+
+.adm-btn-large { 
+    background: #111; 
+    border: 1px solid var(--gold); 
+    padding: 30px 20px; 
+    text-align: center; 
+    cursor: pointer; 
+    border-radius: 10px; 
+    transition: 0.3s;
+    text-transform: uppercase; 
+    font-weight: bold; 
+    letter-spacing: 2px; 
+    font-size: 1rem;
+}
+
+.adm-btn-large:hover { 
+    background: var(--gold); 
+    color: black; 
+    transform: translateY(-5px); 
+}
+
+.compact-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+    gap: 12px; 
+}
+
+.compact-card { 
+    background: var(--card-bg); 
+    border: 1px solid #444; 
+    border-radius: 6px; 
+    overflow: hidden; 
+    text-align: center; 
+    padding-bottom: 8px; 
+    position: relative; 
+    transition: 0.3s; 
+    cursor: pointer; 
+}
+
+.compact-card:hover { 
+    border-color: var(--gold); 
+    transform: scale(1.02); 
+}
+
+.compact-card img { 
+    width: 100%; 
+    height: 100px; 
+    object-fit: cover; 
+    border-bottom: 1px solid #333; 
+}
+
+/* Sons Grid */
+.sounds-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+    gap: 10px; 
+    max-height: 400px; 
+    overflow-y: auto; 
+    padding: 10px; 
+    background: rgba(0,0,0,0.3); 
+    border-radius: 8px; 
+}
+
+.sound-item { 
+    background: #222; 
+    padding: 10px; 
+    border-radius: 5px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 5px; 
+    border: 1px solid #444; 
+}
+
+.sound-item.fav { 
+    border-color: #ffcc66; 
+    background: #2a251a; 
+}
+
+.sound-controls { 
+    display: flex; 
+    gap: 5px; 
+}
+
+/* Inputs e Botões */
+input, textarea, select { 
+    background: #111; 
+    border: 1px solid #444; 
+    color: white; 
+    padding: 10px; 
+    border-radius: 4px; 
+    width: 100%; 
+    margin: 5px 0; 
+}
+
+.btn { 
+    padding: 8px 15px; 
+    cursor: pointer; 
+    border: none; 
+    font-weight: bold; 
+    border-radius: 4px; 
+    text-transform: uppercase; 
+    font-size: 10px; 
+}
+
+.btn-gold { 
+    background: var(--gold); 
+    color: black; 
+}
+
+.btn-red { 
+    background: var(--red); 
+    color: white; 
+}
+
+.token-circle { 
+    position: absolute; 
+    bottom: -10px; 
+    right: -10px; 
+    width: 100px; 
+    height: 100px; 
+    border-radius: 50%; 
+    border: 3px solid var(--gold); 
+    background: #000; 
+    object-fit: cover; 
+}
+
+#chat-window { 
+    height: 320px; 
+    background: rgba(0,0,0,0.6); 
+    border: 1px solid #333; 
+    overflow-y: auto; 
+    padding: 15px; 
+    margin-bottom: 10px; 
+    border-radius: 8px; 
+}
+
+.notif-item {
+    background: rgba(255,255,255,0.05); 
+    padding: 15px; 
+    border-radius: 8px;
+    margin-bottom: 10px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+    border-left: 4px solid var(--gold);
+}
+
+/* Modal de Configurações */
+#settings-modal {
+    position: fixed; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    background: var(--glass); 
+    border: 2px solid var(--gold); 
+    padding: 30px;
+    border-radius: 15px; 
+    z-index: 4000; 
+    min-width: 300px; 
+    box-shadow: 0 0 50px #000;
+    .card-perfil {
+    display: flex;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-radius: 10px;
+    padding: 20px;
+    color: #e0b484; /* Cor dourada do seu tema */
+}
+
+.foto-container {
+    flex: 0 0 300px; /* Largura fixa da foto */
+    margin-right: 20px;
+}
+
+.foto-principal {
+    width: 100%;
+    border-radius: 5px;
+}
+}
